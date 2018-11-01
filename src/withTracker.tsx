@@ -22,12 +22,12 @@ export default function withTracker(WrappedComponent, options = {}) {
     };
 
     return class extends Component<HOCProps> {
-        componentDidMount() {
+        public componentDidMount() {
             const page = this.props.location.pathname;
             trackPage(page);
         }
 
-        componentWillReceiveProps(nextProps) {
+        public componentWillReceiveProps(nextProps) {
             const currentPage = this.props.location.pathname;
             const nextPage = nextProps.location.pathname;
 
@@ -36,7 +36,7 @@ export default function withTracker(WrappedComponent, options = {}) {
             }
         }
 
-        render() {
+        public render() {
             return <WrappedComponent {...this.props} />;
         }
     };
