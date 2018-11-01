@@ -58,6 +58,10 @@ export default class App extends PureComponent<{}, AppState> {
         };
     }
 
+    public componentDidMount(): void {
+        this.tryInitializingMyGA();
+    }
+
     public render() {
         const {configs, reactGaInitialised} = this.state;
         if (reactGaInitialised) {
@@ -70,8 +74,8 @@ export default class App extends PureComponent<{}, AppState> {
         }
         let initializationDebug = (
             <pre>
-        ReactGA.initialize({this.renderConfigs()});
-      </pre>
+                ReactGA.initialize({this.renderConfigs()});
+            </pre>
         );
         if (this.filteredConfigs().length === 0) {
             initializationDebug = <p>No Valid Configs set.</p>;
@@ -114,7 +118,7 @@ export default class App extends PureComponent<{}, AppState> {
         }
         ReactGA.initialize(this.state.configs);
         // Send initial test view
-        ReactGA.pageview('test-init- pageview');
+        ReactGA.pageview('test-init-pageview');
         this.setState({reactGaInitialised: true});
     };
 
@@ -161,4 +165,19 @@ export default class App extends PureComponent<{}, AppState> {
             }, '')
             }\n]`;
     };
+
+    private tryInitializingMyGA = () => {
+        const myGaTrackingId = process.env.REACT_APP_MY_GA_TRACKING_ID;
+        if (myGaTrackingId) {
+            console.debug(`GA_TRACKING_ID found in process, initializing`);
+            const myGAConfig: ConfigType = {
+                ...DEFAULT_CONFIG,
+                trackingId: myGaTrackingId,
+            };
+            ReactGA.initialize([myGAConfig]);
+            ReactGA.pageview('/');
+        } else {
+            console.debug(`GA_TRACKING_ID not found`);
+        }
+    }
 }
