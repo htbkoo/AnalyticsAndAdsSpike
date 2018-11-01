@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ChangeEvent, PureComponent} from 'react';
+import {PureComponent} from 'react';
 import * as ReactGA from 'react-ga';
 
 interface EventsState {
@@ -18,23 +18,7 @@ export default class Events extends PureComponent<{}, EventsState> {
         };
     }
 
-    setValue = (key: keyof EventsState, event) => {
-        this.setState({
-            [key]: event.target.value
-        } as {[k in keyof EventsState]: string});
-    };
-
-    sendEvent = (event) => {
-        event.preventDefault();
-        ReactGA.event(this.state);
-        this.setState({
-            category: '',
-            action: '',
-            label: ''
-        });
-    };
-
-    render() {
+    public render() {
         const {category, action, label} = this.state;
         return (
             <form onSubmit={this.sendEvent}>
@@ -55,4 +39,20 @@ export default class Events extends PureComponent<{}, EventsState> {
             </form>
         );
     }
+
+    private setValue = (key: keyof EventsState, event) => {
+        this.setState({
+            [key]: event.target.value
+        } as { [k in keyof EventsState]: string });
+    };
+
+    private sendEvent = (event) => {
+        event.preventDefault();
+        ReactGA.event(this.state);
+        this.setState({
+            category: '',
+            action: '',
+            label: ''
+        });
+    };
 }
